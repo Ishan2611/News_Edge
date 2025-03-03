@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
-import 'news_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
+import 'package:news_app_1/search_page.dart';
+import 'package:news_app_1/news_page.dart';
+import 'package:news_app_1/categories_page.dart';
+import 'package:news_app_1/login_page.dart';
+import 'package:news_app_1/signup_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // Use generated options
+  );
   runApp(const AdvancedNewsApp());
 }
 
@@ -17,7 +28,19 @@ class AdvancedNewsApp extends StatelessWidget {
         fontFamily: 'Roboto',
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              return const HomePage();
+            } else {
+              return const LoginPage();
+            }
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }
@@ -33,10 +56,7 @@ class HomePage extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF1E3A8A),
-              Color(0xFF7B1FA2)
-            ], // Deep Blue & Purple
+            colors: [Color(0xFF1E3A8A), Color(0xFF7B1FA2)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -48,7 +68,6 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // App Logo & Title with Smooth Animation
                 TweenAnimationBuilder(
                   duration: const Duration(milliseconds: 800),
                   tween: Tween<double>(begin: 0, end: 1),
@@ -64,10 +83,19 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: Image.asset('assets/News-1.png'),
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Image.asset('assets/News-1.png',
+                            width: 100, height: 100),
                       ),
                       const SizedBox(width: 15),
                       const Text(
@@ -77,15 +105,19 @@ class HomePage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                           color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 8,
+                              color: Colors.black38,
+                              offset: Offset(2, 3),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 25),
-
-                // Description Text
                 const Text(
                   'Get real-time, trending, and categorized news at your fingertips with our Advanced News App!',
                   textAlign: TextAlign.center,
@@ -95,50 +127,99 @@ class HomePage extends StatelessWidget {
                     letterSpacing: 0.5,
                     height: 1.5,
                     color: Colors.white70,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 6,
+                        color: Colors.black26,
+                        offset: Offset(1, 2),
+                      ),
+                    ],
                   ),
                 ),
-
                 const SizedBox(height: 35),
-
-                // "Explore News" Button with Animation
-                TweenAnimationBuilder(
-                  duration: const Duration(milliseconds: 900),
-                  tween: Tween<double>(begin: 0, end: 1),
-                  builder: (context, double value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Transform.scale(
-                        scale: value,
-                        child: child,
-                      ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.deepPurpleAccent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 6,
+                    shadowColor: Colors.deepPurpleAccent.withOpacity(0.4),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NewsPage()),
                     );
                   },
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.deepPurpleAccent,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 5,
-                      shadowColor: Colors.black.withOpacity(0.2),
+                  child: const Text(
+                    'Explore News',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NewsPage()),
-                      );
-                    },
-                    child: const Text(
-                      'Explore News',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                      ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 6,
+                    shadowColor: Colors.blueAccent.withOpacity(0.4),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CategoriesPage()),
+                    );
+                  },
+                  child: const Text(
+                    'News Categories',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 6,
+                    shadowColor: Colors.redAccent.withOpacity(0.4),
+                  ),
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
                     ),
                   ),
                 ),
