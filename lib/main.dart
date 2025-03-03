@@ -181,6 +181,35 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
+                          builder: (context) => const SearchPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Search News',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.orangeAccent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 6,
+                    shadowColor: Colors.orangeAccent.withOpacity(0.4),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
                           builder: (context) => const CategoriesPage()),
                     );
                   },
