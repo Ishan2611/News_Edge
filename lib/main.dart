@@ -11,7 +11,7 @@ import 'package:news_app_1/signup_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // Use generated options
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const AdvancedNewsApp());
 }
