@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A Flutter news application.">
-  <meta name="theme-color" content="#2196F3">
+  <meta name="theme-color" content="#1a73e8">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,8 +15,33 @@
   <link rel="manifest" href="manifest.json">
 
   <title>News App</title>
+
+  <style>
+    /* Simple full-screen loader */
+    #loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: sans-serif;
+      font-size: 18px;
+      color: #444;
+      background-color: #f5f5f5;
+    }
+  </style>
 </head>
 <body>
+  <!-- Loading fallback for Lighthouse FCP -->
+  <div id="loading">🚀 Loading News App...</div>
+
+  <script>
+    // Remove loading screen when Flutter is ready
+    window.addEventListener('flutter-first-frame', function () {
+      const loader = document.getElementById('loading');
+      if (loader) loader.remove();
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
   <script src="service_worker_register.js"></script>
 </body>
