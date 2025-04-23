@@ -28,11 +28,13 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> searchNews(String query) async {
     setState(() {
       isLoading = true;
-      selectedIndex = null; // Reset expanded article when searching
+      selectedIndex = null;
     });
 
-    final url = Uri.parse(
+    final encodedQuery = Uri.encodeComponent(
         'https://newsapi.org/v2/everything?q=$query&sortBy=publishedAt&apiKey=05e80915e833424499779414124e6a23');
+    final url = Uri.parse('https://api.allorigins.win/raw?url=$encodedQuery');
+
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -42,9 +44,7 @@ class _SearchPageState extends State<SearchPage> {
         isLoading = false;
       });
     } else {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
       throw Exception('Failed to load search results');
     }
   }

@@ -20,8 +20,9 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Future<void> fetchNews() async {
-    final url = Uri.parse(
-        'https://newsapi.org/v2/top-headlines?country=us&apiKey=05e80915e833424499779414124e6a23');
+    final url = Uri.parse('https://api.allorigins.win/raw?url=' +
+        Uri.encodeComponent(
+            'https://newsapi.org/v2/top-headlines?country=us&apiKey=05e80915e833424499779414124e6a23'));
     final response = await http.get(url);
 
     if (response.statusCode == 200) {

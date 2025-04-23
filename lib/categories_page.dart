@@ -29,8 +29,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Future<void> fetchNews(String category) async {
-    final url = Uri.parse(
+    final encodedUrl = Uri.encodeComponent(
         'https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=05e80915e833424499779414124e6a23');
+    final url = Uri.parse('https://api.allorigins.win/raw?url=$encodedUrl');
+
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
